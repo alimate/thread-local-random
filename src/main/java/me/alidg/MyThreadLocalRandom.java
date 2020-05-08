@@ -2,6 +2,10 @@ package me.alidg;
 
 import java.util.Random;
 
+/**
+ * A special implementation using {@link ThreadLocal}. Since random generators will be confined to each thread,
+ * we're going remove unnecessary synchronizations such as CAS or locks.
+ */
 public class MyThreadLocalRandom extends Random {
 
     private long seed = System.nanoTime();
@@ -10,7 +14,8 @@ public class MyThreadLocalRandom extends Random {
     private static final long mask = (1L << 48) - 1;
     private static final ThreadLocal<MyThreadLocalRandom> threadLocal = ThreadLocal.withInitial(MyThreadLocalRandom::new);
 
-    private MyThreadLocalRandom() {}
+    private MyThreadLocalRandom() {
+    }
 
     public static MyThreadLocalRandom current() {
         return threadLocal.get();
